@@ -6,7 +6,7 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_community.tools import WikipediaQueryRun, DuckDuckGoSearchRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.tools import Tool 
-from tools import search_tool, wiki_tool, datetime_tool, openyt, opengithub, openvscode
+from tools import search_tool, wiki_tool, datetime_tool, openyt, opengithub, openvscode, getsysinfo, googleSearch
 import json
 import re
 import pyttsx3
@@ -39,8 +39,8 @@ prompt = ChatPromptTemplate.from_messages([
       - 'query': restate the query.
       - 'response': direct answer.
       - 'details': supporting info (e.g., sources, context) as a dictionary.
-      - 'tools_used': list tools (e.g., "internal knowledge", "search", "wikipedia", "current_datetime", "open_youtube", "open_github", "open_vscode").
-    - Use tools when needed: "current_datetime" for time, "search" for web info, "wikipedia" for facts, "open_youtube" to open YouTube, "open_github" to open github. "open_vscode" to open visual studio code (vs code).
+      - 'tools_used': list tools (e.g., "internal knowledge", "search", "wikipedia", "current_datetime", "open_youtube", "opengithub", "open_vscode", "getsysinfo", "googleSearch").
+    - Use tools when needed: "current_datetime" for time, "search" for web info, "wikipedia" for facts, "open_youtube" to open YouTube (when asked to search for something youtube give the open_youtube function this type of query "https://www.youtube.com/results?search_query='give_the_query_here'"), "opengithub" to open github. "open_vscode" to open visual studio code (vs code). "getsysinfo" to get the complete system information, "googleSearch" for searching/opening google.
     - If unclear, ask for clarification concisely.
 
     Keep it sharp, sophisticated, and mission-ready. Use chat history if relevant: {chat_history}
@@ -60,7 +60,7 @@ search_tool = Tool(
 wikipedia_api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=100)
 wiki_tool = WikipediaQueryRun(api_wrapper=wikipedia_api_wrapper)
 
-tools = [search_tool, wiki_tool, datetime_tool, openyt, opengithub, openvscode]
+tools = [search_tool, wiki_tool, datetime_tool, openyt, opengithub, openvscode, getsysinfo,googleSearch]
 
 agent = create_tool_calling_agent(
     llm=llm,
